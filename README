@@ -1,0 +1,13 @@
+1) if desired, uncomment "# define CONSISTENCY_CHECK"
+   at line 133 of utils.c for the ReadGraph() routine
+   (slow for large graphs), and edit "#define NUM_THREADS"
+   at line 6 of odes.h to reflect your architecture
+2) make
+3) time ./denseSG <graph file> <min density> <min nodes>
+
+
+test graphs are in the "graphs" directory
+
+If you want to experiment with excluding some edges, uncomment 
+"#define EXCLUDED_EDGES" in odes.h and define some excluded edges
+in denseSG.c

@@ -1,3 +1,47 @@
+<b>ODES</b> is a pthreads parallelized exact algorithm to enumerate all maximal 
+sub-graphs of a graph that exceed a specified cutoff density of at least 1/2, even 
+if they overlap. The following is proved in our <a href="http://bioinformatics.oxfordjournals.org/content/26/21/2788.abstract"><i>Bioinformatics</i></a> paper:
+
+<b>Theorem</b><br>
+A connected graph <b>G</b>, with density den(<b>G</b>) >= 0.5, and number of 
+verticies <i>n</i> >= 3, has at least one non-cut vertex <i>w</i> where degree 
+<i>d(w)</i> &lt;= the average degree of vertices in <b>G</b>. 
+Removal of <i>w</i> from <b>G</b> does not decrease the density of <b>G</b>.
+<br>
+<br>
+The theorem says that vertices can iteratively be removed from a sufficiently 
+dense graph, without decreasing its density or cutting it into disconnected 
+pieces, until all that remains is a single pair of connected vertices. The 
+algorithm goes the other way: Starting with the set <b>S</b> of all connected 
+pairs of vertices (single-edge sub-graphs), an iteration consists of looking for 
+adjacent vertices that can be added to each member of <b>S</b> consistent with 
+the theorem. A member <b>m</b> of <b>S</b> to which a vertex can be added is 
+placed with the added vertex into a new set <b>S'</b> for the next iteration, 
+one for each new vertex that can be added to <b>m</b>. The brute-force search 
+space of a non-clique graph <b>G</b> is thus confined to the actual dense 
+sub-graphs of <b>G</b>, and since each iteration is independent, it can be 
+handled by its own thread. During any iteration, a dense subgraph is saved for 
+output if it is of sufficient size, and no more vertices can be added.
+<br>
+<br>
+Features yet to implement (see paper):<br><br>
+<li>run algorithm within a series of density bins that span the interval 0.5 to 1.0</li>
+<li>replace binary search with a fast hash function</li>
+<li>output some indication of overlaps</li>
+<br>
+Due to its high complexity, <b>ODES</b> does not scale well to very large dense 
+sub-graphs. This can be ameliorated, however, by using <b>ODES</b> in conjunction 
+with a heuristic method. If heuristically determined edges from large dense 
+sub-graphs <b>H</b> are excluded from the initial single-edge sub-graph list 
+<b>S</b> for <b>ODES</b>, but retained in the subsequent search space, <b>ODES</b> 
+will find all other overlapping dense sub-graphs outside of <b>H</b>, along with 
+those dense sub-graphs that overlap <b>H</b> containing at least one edge <b>E</b> 
+outside of <b>H</b> that can be the last one chosen according to our theorem. 
+Dense sub-graphs overlapping <b>H</b> that have no such edge <b>E</b> outside 
+of <b>H</b> will not be found.
+
+To use:
+
 1) if desired, uncomment "# define CONSISTENCY_CHECK"
    at line 133 of utils.c for the ReadGraph() routine
    (slow for large graphs), and edit "#define NUM_THREADS"
@@ -6,7 +50,7 @@
 3) time ./denseSG <graph file> <min density> <min nodes>
 
 
-test graphs are in the "graphs" directory
+test graphs are in the "graphs" directory.
 
 If you want to experiment with excluding some edges, uncomment 
 "#define EXCLUDED_EDGES" in odes.h and define some excluded edges

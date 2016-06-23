@@ -1,5 +1,5 @@
 /*
- odes.h                                                  sudowrestler@gmail.com
+ odes.h                                                      jlong@jimlong.org
  
  A breadth-first algorithm to find dense subgraphs with density >= 1/2
  Copyright (C) 2010 James Long

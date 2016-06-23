@@ -1,5 +1,5 @@
 /*
- denseSG.c                                               sudowrestler@gmail.com
+ denseSG.c                                                   jlong@jimlong.org
  
  A driver for ODES, an algorithm to find dense subgraphs with density >= 1/2
  Copyright (C) 2010 James Long
